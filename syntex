@@ -1,0 +1,86 @@
+Capture.defineScript({
+  name: "total script blocker",
+  version: "1.0.0",
+  description: "[Modify matched traffic session webRequest onBeforeRequest.]",
+  match: {
+    urls: ["https://api.example.com/*"],
+    excludeUrls: [],
+    methods: []
+      },
+      
+    "action": { "type": "block" },
+    "trigger": {
+      "url-filter": ".*",
+      "resource-type": ["script", "subframe"],
+      "load-type": ["third-party"]
+    },
+    
+    "action": { "type": "block" },
+    "trigger": {
+      "url-filter": ".*",
+      "resource-type": ["script", "subframe"]
+    },
+    
+    "action": { "type": "block" },
+    "trigger": {
+      "url-filter": ".*tracker.*",
+      "resource-type": ["script"]
+    },
+    
+    "action": { "type": "block" },
+    "trigger": {
+      "url-filter": ".*ads.*",
+      "resource-type": ["script", "subframe"]
+    },
+    
+    "action": { "type": "block" },
+    "trigger": {
+      "url-filter": ".*",
+      "resource-type": ["object", "embed", "subframe"],
+      "load-type": ["third-party"]
+    },
+    
+    "action": { "type": "block" },
+    "trigger": {
+      "url-filter": ".*(appstore|itunes|play\.google|microsoftstore).*",
+      "resource-type": ["subframe", "script", "object", "embed"]
+    },
+    
+    "action": {
+      "type": "block"
+    },
+    "trigger": {
+      "url-filter": ".*",
+      "resource-type": ["script", "subframe"]
+    },
+    
+  shouldMatch(request) {
+    return true;
+  },
+
+  onRequestHeaders(context, request, response) {
+    return request;
+  },
+
+  onRequest(context, request, response) {
+    return request;
+  },
+
+  onResponseHeaders(context, request, response) {
+    return response;
+  },
+
+  onResponse(context, request, response) {
+    return response;
+  },
+  onRequestHeaders(context, request, response) {
+    // Block scripts and child frames
+    if (request.resourceType === 'script' || request.resourceType === 'sub_frame') {
+        return { cancel: true }; // Stops the request
+    }
+
+    // Otherwise, pass through unchanged
+    return request;
+},
+  
+});
